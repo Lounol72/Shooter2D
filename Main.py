@@ -67,10 +67,8 @@ while running:
         game.handle_input()
         surface.blit(background_game, (0, 0))
         game.update(surface)
-        surface.blit(Font.render(f"{game.player.score}", 1, (255, 0, 0)),
-                     (90, 50))
-        surface.blit(Font.render(f"{game.player.magazine}", 1, (255, 0, 0)),
-                     (90, 70))
+        surface.blit(Font.render(f"{game.player.score}", 1, (255, 0, 0)),(90, 50))
+        surface.blit(Font.render(f"{game.player.magazine}", 1, (255, 0, 0)),(90, 70))
 
     elif game.Game_over:
 

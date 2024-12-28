@@ -1,9 +1,9 @@
 import pygame
 from Bullets import bullet
-import Animation
+from Animation import Animate_Sprite
 
 
-class Player(Animation.AnimateSprite):
+class Player(Animate_Sprite):
     def __init__(self, game):
         # Initialise ma super classe (classe parent) AnimateSprite
         super().__init__('Soldier', 0.175)
@@ -96,27 +96,27 @@ class Player(Animation.AnimateSprite):
     def update_animation(self):
         # Gère les animations
 
-        if not self.shooting and not self.moving and not self.reloading and not self.reloading:
+        if not self.shooting and not self.moving and not self.reloading:
 
-            super().update('Soldier', 0.175)
+            super().Update('Soldier', 0.175)
             self.height = self.image.get_height()
             #self.rect.y = 720 - self.height
         else:
             if self.moving and not self.shooting:
                 self.velocity = 5
-                super().update('Walk_to_right_Soldier_1', 0.75)
+                super().Update('Walk_to_right_Soldier_1', 0.75)
                 self.height = self.image.get_height()
                 #self.rect.y = 720 - self.height
 
             if self.shooting:
                 self.velocity = 2
-                super().update('Shoot_Soldier_1', 0.75)
+                super().Update('Shoot_Soldier_1', 0.75)
                 self.height = self.image.get_height()
                 #self.rect.y = 720 - self.height
 
             if self.reloading:
                 self.velocity = 2
-                super().update('Reloding_Soldier_1', 0.50)
+                super().Update('Reloding_Soldier_1', 0.50)
                 self.height = self.image.get_height()
                 #self.rect.y = 720 - self.height
 

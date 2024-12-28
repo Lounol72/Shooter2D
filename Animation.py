@@ -1,15 +1,15 @@
 import pygame
-
+import os
 
 # Classe qui s'occupe des animations
-
-class AnimateSprite(pygame.sprite.Sprite):
-    def __init__(self, sprite_name: str, speed=1):
+class Animate_Sprite(pygame.sprite.Sprite):
+    def __init__(self, sprite_name: str, speed: float = 1.0):
         super().__init__()
+        self.sprite_name = sprite_name
+        self.speed = speed
         self.image = pygame.image.load(f"assets/{sprite_name}.png")
         self.current_image = 0
         self.images = animation.get(sprite_name)
-        self.speed = speed
 
     # Méthode pour animer le sprite
     def animate(self):
@@ -18,21 +18,17 @@ class AnimateSprite(pygame.sprite.Sprite):
             self.current_image = 0
         self.image = self.images[int(self.current_image)]
 
-    def update(self, sprite_name, speed):
-        self.speed = speed
-        self.images = animation.get(sprite_name)
+    def Update(self):
+        # Utilisez self.sprite_name et self.speed directement
+        self.images = animation.get(self.sprite_name)
+        self.animate()
 
 
 # Fonction pour charger les images d'un sprite
 
 def load_animation_images(dos_name: str, sprite_name: str, number_img: int):
-    images = list()
-    path = f'assets/{dos_name}/{sprite_name}'
-
-    for num in range(1, number_img):
-        image_path = f'{path}{num}.png'
-        images.append(pygame.image.load(image_path))
-    return images
+    path = os.path.join('assets', dos_name, sprite_name)
+    return [pygame.image.load(os.path.join(path + f'{num}.png')) for num in range(1, number_img)]
 
 
 # Définir un dictionnaire qui va contenir les images chargées de chaque sprite

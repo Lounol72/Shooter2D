@@ -1,9 +1,9 @@
 import pygame
 import random
-import Animation
+from Animation import Animate_Sprite
 
 
-class Monster(Animation.AnimateSprite):
+class Monster(Animate_Sprite):
     def __init__(self, game):
         super().__init__('Walk_to_left_Zombie_1')
         self.is_attacking = False
