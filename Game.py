@@ -61,6 +61,7 @@ class Game:
             self.all_monsters.add(Monster(self))
 
     def handle_input(self):
+        self.current_time = pygame.time.get_ticks()
         pressed = pygame.key.get_pressed()
         player = self.player
 
@@ -74,8 +75,11 @@ class Game:
             player.IsMovingLeft()
         if pressed[pygame.K_d] and player.rect.x < (1080 - player.width):
             player.IsMovingRight()
-        player.moving = not (pressed[pygame.K_q] or pressed[pygame.K_d] or pressed[pygame.K_SPACE])
+        
+        # Correction de la logique de mouvement
+        player.moving = pressed[pygame.K_q] or pressed[pygame.K_d] or pressed[pygame.K_z] or pressed[pygame.K_s]
         player.shooting = pressed[pygame.K_c]
+        
         if pressed[pygame.K_r]:
             player.reload()
         if pressed[pygame.K_DELETE]:
@@ -120,6 +124,7 @@ class Game:
         for monster in self.all_monsters:
             monster.update_health_bar(surface)
             monster.update_animation()
+            monster.move()
         for player in self.all_players:
             player.update_animation()
             player.update_health_bar(surface)

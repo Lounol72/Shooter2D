@@ -98,25 +98,25 @@ class Player(Animate_Sprite):
 
         if not self.shooting and not self.moving and not self.reloading:
 
-            super().Update('Soldier', 0.175)
+            super().Update('Soldier', 0.0875)
             self.height = self.image.get_height()
             #self.rect.y = 720 - self.height
         else:
             if self.moving and not self.shooting:
                 self.velocity = 5
-                super().Update('Walk_to_right_Soldier_1', 0.75)
+                super().Update('Walk_to_right_Soldier_1', 0.375)
                 self.height = self.image.get_height()
                 #self.rect.y = 720 - self.height
 
             if self.shooting:
                 self.velocity = 2
-                super().Update('Shoot_Soldier_1', 0.75)
+                super().Update('Shoot_Soldier_1', 0.375)
                 self.height = self.image.get_height()
                 #self.rect.y = 720 - self.height
 
             if self.reloading:
                 self.velocity = 2
-                super().Update('Reloding_Soldier_1', 0.50)
+                super().Update('Reloding_Soldier_1', 0.25)
                 self.height = self.image.get_height()
                 #self.rect.y = 720 - self.height
 

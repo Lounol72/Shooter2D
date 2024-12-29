@@ -24,3 +24,6 @@ class bullet(pygame.sprite.Sprite):
             monster.damage(self.player.attack)
         if self.rect.x > 1080 or self.rect.x - self.init_x > self.range:
             self.remove()
+            
+    def update(self):
+        self.move()

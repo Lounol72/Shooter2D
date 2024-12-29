@@ -71,10 +71,10 @@ class Monster(Animate_Sprite):
     def update_animation(self):
         # update animations
         if self.is_attacking:
-            super().update('Attack_Zombie_1', 0.33)
+            super().Update('Attack_Zombie_1', 0.33)
         elif self.rect.x < self.game.player.rect.x:
-            super().update('Walk_to_right_Zombie_1', 1)
+            super().Update('Walk_to_right_Zombie_1', 1)
         else:
-            super().update('Walk_to_left_Zombie_1', 1)
+            super().Update('Walk_to_left_Zombie_1', 1)
 
         self.animate()
