@@ -2,7 +2,6 @@ import pygame
 import random
 from Animation import Animate_Sprite
 
-
 class Monster(Animate_Sprite):
     def __init__(self, game):
         super().__init__('Walk_to_left_Zombie_1')
