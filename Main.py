@@ -4,12 +4,10 @@ from menus.main_menu import MainMenu
 from menus.game_over_menu import GameOverMenu
 
 # Constants
-BLACK = (0, 0, 0)
-GREY = (110, 110, 110)
-RED = (255, 0, 0)
-ORANGE = (249, 92, 14)
 WIDTH = 1080
 HEIGHT = 720
+RED = (255, 0, 0)
+GREY = (110, 110, 110)
 
 # Initialize Pygame
 pygame.init()
@@ -49,6 +47,7 @@ for key, pos in button_positions.items():
     assets[key] = rect
 
 def main_loop():
+    global running
     game = Game()
     clock = pygame.time.Clock()
     game.read_fic()
@@ -60,6 +59,23 @@ def main_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                game.pressed[event.key] = True
+            elif event.type == pygame.KEYUP:
+                game.pressed[event.key] = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if not game.is_playing and not game.Game_over:
+                    action = main_menu.handle_event(event)
+                    actions = {
+                        "play": lambda: setattr(game, 'is_playing', True),
+                        "difficulty": lambda: None  # Handle difficulty change
+                    }
+                    actions.get(action, lambda: None)()
+                elif game.Game_over:
+                    action = game_over_menu.handle_event(event)
+                    if action == "restart":
+                        game.Game_over = False
+                        game.is_playing = True
 
         if game.is_playing and not game.Game_over:
             game.handle_input()

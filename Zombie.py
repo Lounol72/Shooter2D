@@ -19,9 +19,7 @@ class Monster(Animate_Sprite):
         self.update_difficulty(game.monster_velocity, game.monster_attack, game.monster_health)
 
     def update_health_bar(self, surface):
-
         # Update the health bar of the zombie
-
         bar_color = (255, 0, 0)
         back_bar_color = (51, 51, 51)
 
@@ -32,9 +30,7 @@ class Monster(Animate_Sprite):
         pygame.draw.rect(surface, bar_color, bar_position)
 
     def damage(self, amount):
-
         # Handle damages of the zombie
-
         self.health -= amount
         if self.health <= 0:
             self.max_health += 10
@@ -44,7 +40,7 @@ class Monster(Animate_Sprite):
             if self.game.player.score:
                 self.game.player.score += 5
             else:
-                self.game.player.score =5
+                self.game.player.score = 5
 
     def update_difficulty(self, velocity, attack, health_multiplier):
         self.base_health = 100  # Santé de base
@@ -54,9 +50,7 @@ class Monster(Animate_Sprite):
         self.health = self.max_health
 
     def move(self):
-
         # Make the zombie move or attack
-
         if not self.game.check_collision(self, self.game.all_players):
             if self.rect.x > self.game.player.rect.x:
                 self.rect.x -= self.velocity

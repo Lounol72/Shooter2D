@@ -17,3 +17,10 @@ class GameOverMenu:
         pygame.draw.rect(self.surface, (110, 110, 110), [self.assets["game_over_button_rect"].x, self.assets["game_over_button_rect"].y, self.assets["game_over_button"].get_width(), self.assets["game_over_button"].get_height()])
         self.surface.blit(pygame.font.SysFont("Saira ExtraCondensed Black", 36).render(f"Votre score est de :  {self.game.player_high_score[-1]} !", 1, (255, 0, 0)), (self.surface.get_width() // 2 - 90, self.surface.get_height() - 50))
         self.surface.blit(self.assets["game_over_button"], (self.assets["game_over_button_rect"].x, self.assets["game_over_button_rect"].y))
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            if self.assets["game_over_button_rect"].collidepoint(mouse_pos):
+                return "restart"
+        return None

@@ -27,7 +27,7 @@ class Player(Animate_Sprite):
         # Savoir quand le joueur recharge
         self.magazine = 20
         self.score = 0
-
+        self.delay = 0  # Initialize delay for shooting
         # Pour les animations
         self.reloading = False
         self.moving = False
