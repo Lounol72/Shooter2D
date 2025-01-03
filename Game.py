@@ -8,7 +8,11 @@ import csv
 class Game:
     def __init__(self):
         self.max_monster = 10  # Example value, set this appropriately
+        self.dificulty = 'normal'
         self.all_monsters = pygame.sprite.Group()
+        self.is_paused = False
+        self.settings = False
+        self.set_difficulty = False
         self.is_playing = False
         self.Game_over = False
         self.player = Player(self)
@@ -36,20 +40,17 @@ class Game:
     def read_fic(self):
         self.player_high_score = []
         os.makedirs(os.path.dirname(self.fic), exist_ok=True)
-        try:
+        from contextlib import suppress
+
+        with suppress(FileNotFoundError):
             with open(self.fic, 'r') as file:
                 reader = csv.reader(file)
-                for row in reader:
-                    if row:
-                        self.player_high_score.append(int(row[0]))
-        except FileNotFoundError:
-            pass
+                self.player_high_score.extend(int(row[0]) for row in reader if row)
 
     def read_max_score(self):
         try:
             with open(self.fic, 'r') as file:
-                scores = file.readlines()
-                if scores:
+                if scores := file.readlines():
                     return max(int(score.strip()) for score in scores)
         except FileNotFoundError:
             return 0
@@ -153,12 +154,26 @@ class Game:
 
         # Reset game state and return to main menu
         self.is_playing = False
-        self.Game_over = False
 
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
     def start(self):
         self.is_playing = True
-        self.update_difficulty('normal')
-        self.spawn_monster()
+        self.Game_over = False
+        self.player.health = self.player.max_health
+        self.player.score = 0
+        self.all_monsters.empty()
+        # Adjust game parameters based on difficulty
+        if self.difficulty == "easy":
+            self.player.max_health = 200
+            self.monster_spawn_rate = 1.0
+        elif self.difficulty == "medium":
+            self.player.max_health = 100
+            self.monster_spawn_rate = 1.5
+        elif self.difficulty == "hard":
+            self.player.max_health = 50
+            self.monster_spawn_rate = 2.0
+        elif self.difficulty == "extreme":
+            self.player.max_health = 25
+            self.monster_spawn_rate = 2.5
