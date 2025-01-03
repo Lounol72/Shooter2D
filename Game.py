@@ -7,8 +7,8 @@ import csv
 
 class Game:
     def __init__(self):
-        self.max_monster = 10  # Example value, set this appropriately
-        self.dificulty = 'normal'
+        self.max_monster = 10
+        self.difficulty = 'normal'
         self.all_monsters = pygame.sprite.Group()
         self.is_paused = False
         self.settings = False
@@ -16,22 +16,17 @@ class Game:
         self.is_playing = False
         self.Game_over = False
         self.player = Player(self)
-        self.monster_velocity = 1  # Initialize monster velocity
-        self.monster_attack = 1  # Initialize monster attack
-        self.monster_health = 1 # Initialize monster health
-        # Other initializations...
+        self.monster_velocity = 1
+        self.monster_attack = 1
+        self.monster_health = 1
         self.Difficulty = {
             'easy': [1, 1, 0.5, 2],
             'normal': [1, 1, 1, 4],
             'hard': [1.5, 1.5, 1.5, 6],
             'cauchemar': [2, 2, 1.75, 8],
         }
-
         self.all_players = pygame.sprite.Group()
-        self.player = Player(self)
         self.all_players.add(self.player)
-
-        self.all_monsters = pygame.sprite.Group()
         self.pressed = {}
         self.fic = 'score/best.csv'
         self.ground_level = 720
@@ -40,21 +35,17 @@ class Game:
     def read_fic(self):
         self.player_high_score = []
         os.makedirs(os.path.dirname(self.fic), exist_ok=True)
-        from contextlib import suppress
-
-        with suppress(FileNotFoundError):
-            with open(self.fic, 'r') as file:
-                reader = csv.reader(file)
-                self.player_high_score.extend(int(row[0]) for row in reader if row)
+        with open(self.fic, 'r') as file:
+            reader = csv.reader(file)
+            self.player_high_score.extend(int(row[0]) for row in reader if row)
 
     def read_max_score(self):
         try:
             with open(self.fic, 'r') as file:
-                if scores := file.readlines():
-                    return max(int(score.strip()) for score in scores)
+                scores = file.readlines()
+                return max(int(score.strip()) for score in scores) if scores else 0
         except FileNotFoundError:
             return 0
-        return 0
 
     def write_max_score(self, score):
         with open(self.fic, 'a') as file:
@@ -75,10 +66,10 @@ class Game:
             player.IsMovingLeft()
         if pressed[pygame.K_d] and player.rect.x < (1080 - player.width):
             player.IsMovingRight()
-        
-        player.moving = pressed[pygame.K_q] or pressed[pygame.K_d] or pressed[pygame.K_z] or pressed[pygame.K_s]
+
+        player.moving = any([pressed[pygame.K_q], pressed[pygame.K_d], pressed[pygame.K_z], pressed[pygame.K_s]])
         player.shooting = pressed[pygame.K_c]
-        
+
         if pressed[pygame.K_r]:
             player.reload()
         if pressed[pygame.K_DELETE]:
@@ -91,10 +82,7 @@ class Game:
             self.all_monsters.add(Monster(self))
 
     def update_difficulty(self, chosen):
-        self.monster_velocity = self.Difficulty[chosen][0]
-        self.monster_attack = self.Difficulty[chosen][1]
-        self.monster_health_multiplier = self.Difficulty[chosen][2]
-
+        self.monster_velocity, self.monster_attack, self.monster_health_multiplier = self.Difficulty[chosen]
         for monster in self.all_monsters:
             monster.update_difficulty(self.monster_velocity, self.monster_attack, self.monster_health_multiplier)
 
@@ -133,26 +121,7 @@ class Game:
     def game_over(self, surface):
         self.all_monsters.empty()
         self.player.health = self.player.max_health
-
-        score_file = self.fic
-        sync_file = "assets/PNG/War2/fic.txt"
-
-        try:
-            with open(score_file, 'a') as file:
-                file.write(f"{self.player.score}\n")
-
-            current_time = time.time()
-            os.utime(score_file, (current_time, current_time))
-            os.utime(sync_file, (current_time, current_time))
-        except Exception as e:
-            print(f"Error updating score file: {e}")
-
-        # Update max score if current score is higher
-        if self.player.score > self.max_score:
-            self.max_score = self.player.score
-            self.write_max_score(self.max_score)
-
-        # Reset game state and return to main menu
+        self.write_max_score(self.player.score)
         self.is_playing = False
 
     def check_collision(self, sprite, group):
@@ -164,16 +133,10 @@ class Game:
         self.player.health = self.player.max_health
         self.player.score = 0
         self.all_monsters.empty()
-        # Adjust game parameters based on difficulty
-        if self.difficulty == "easy":
-            self.player.max_health = 200
-            self.monster_spawn_rate = 1.0
-        elif self.difficulty == "medium":
-            self.player.max_health = 100
-            self.monster_spawn_rate = 1.5
-        elif self.difficulty == "hard":
-            self.player.max_health = 50
-            self.monster_spawn_rate = 2.0
-        elif self.difficulty == "extreme":
-            self.player.max_health = 25
-            self.monster_spawn_rate = 2.5
+        difficulty_settings = {
+            "easy": (200, 1.0),
+            "medium": (100, 1.5),
+            "hard": (50, 2.0),
+            "extreme": (25, 2.5)
+        }
+        self.player.max_health, self.monster_spawn_rate = difficulty_settings.get(self.difficulty, (100, 1.0))

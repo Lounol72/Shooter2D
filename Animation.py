@@ -1,7 +1,6 @@
 import pygame
 import os
 
-# Classe qui s'occupe des animations
 class Animate_Sprite(pygame.sprite.Sprite):
     def __init__(self, sprite_name: str, speed: float = 1.0):
         super().__init__()
@@ -11,7 +10,6 @@ class Animate_Sprite(pygame.sprite.Sprite):
         self.current_image = 0
         self.images = animation.get(sprite_name, [])
 
-    # Méthode pour animer le sprite
     def animate(self):
         self.current_image += self.speed
         if self.current_image >= len(self.images):
@@ -19,14 +17,10 @@ class Animate_Sprite(pygame.sprite.Sprite):
         self.image = self.images[int(self.current_image)]
 
     def Update(self, sprite_name: str, speed: float):
-        # Utilisez self.sprite_name et self.speed directement
         self.sprite_name = sprite_name
         self.speed = speed
         self.images = animation.get(self.sprite_name)
         self.animate()
-
-
-# Fonction pour charger les images d'un sprite
 
 def load_animation_images(dos_name: str, sprite_name: str, number_img: int):
     images = []
@@ -36,9 +30,6 @@ def load_animation_images(dos_name: str, sprite_name: str, number_img: int):
         images.append(pygame.image.load(image_path))
     return images
 
-
-
-# Définir un dictionnaire qui va contenir les images chargées de chaque sprite
 animation = {
     'Walk_to_left_Zombie_1': load_animation_images('Zombie/Zombie Man/Walk_to_left', 'Zombie', 8),
     'Walk_to_right_Zombie_1': load_animation_images('Zombie/Zombie Man/Walk_to_right', 'Zombie', 8),
