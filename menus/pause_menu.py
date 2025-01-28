@@ -4,12 +4,10 @@ class PauseMenu:
     def __init__(self, surface, assets):
         self.surface = surface
         self.assets = assets
-
-    def render(self):
         # Create a transparent surface
-        transparent_surface = pygame.Surface((self.surface.get_width(), self.surface.get_height()), pygame.SRCALPHA)
+        self.transparent_surface = pygame.Surface((self.surface.get_width(), self.surface.get_height()), pygame.SRCALPHA)
         # Fill it with a transparent color
-        transparent_surface.fill((0, 0, 0, 0)) 
+        self.transparent_surface.fill((0, 0, 0, 0)) 
 
         # Define the rectangle dimensions and margin
         margin = 50
@@ -22,8 +20,12 @@ class PauseMenu:
         # Draw the semi-transparent background
         pygame.draw.rect(self.surface, (0, 0, 0, 100), [0, 0, self.surface.get_width(), self.surface.get_height()])
         # Blit the transparent surface onto the main surface
-        pygame.draw.rect(transparent_surface, rect_color, (rect_x, rect_y, rect_width, rect_height), border_radius=20)
-        self.surface.blit(transparent_surface, (0, 0))
+        pygame.draw.rect(self.transparent_surface, rect_color, (rect_x, rect_y, rect_width, rect_height), border_radius=20)
+
+    def render(self):
+        
+        self.surface.blit(self.assets["background_game"], (0, 0))
+        self.surface.blit(self.transparent_surface, (0, 0))
 
         # Calculate the position to center the play button on the X axis
         play_button_x = (self.surface.get_width() - self.assets["play_button"].get_width()) // 2
